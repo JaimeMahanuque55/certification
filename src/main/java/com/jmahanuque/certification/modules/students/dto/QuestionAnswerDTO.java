@@ -15,4 +15,5 @@ public class QuestionAnswerDTO {
 
     private String questionID;
     private String alternativeID;
+    private boolean isCorrect;
 }
