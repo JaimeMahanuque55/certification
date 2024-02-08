@@ -1,6 +1,8 @@
 package com.jmahanuque.certification.modules.students.controllers;
 
+import com.jmahanuque.certification.modules.students.dto.StudentCertificationAnswerDTO;
 import com.jmahanuque.certification.modules.students.dto.VerifyIfHasCertificationDTO;
+import com.jmahanuque.certification.modules.students.useCases.StudentCertificationAnswersUseCase;
 import com.jmahanuque.certification.modules.students.useCases.VerifyIfHasCertificationUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,9 @@ public class StudentController {
     @Autowired
     private VerifyIfHasCertificationUseCase verifyIfHasCertificationUseCase;
 
+    @Autowired
+    private StudentCertificationAnswersUseCase studentCertificationAnswersUseCase;
+
     @PostMapping("verifyIfHasCertification")
     public String verifyIfHasCertification(@RequestBody VerifyIfHasCertificationDTO verifyIfHasCertificationDTO) {
 
@@ -27,4 +32,30 @@ public class StudentController {
         return "Usuario pode fazer a prova";
     }
 
+    @PostMapping("/certification/answer")
+    public StudentCertificationAnswerDTO certificationAnswer(@RequestBody StudentCertificationAnswerDTO studentCertificationAnswerDTO) throws Exception{
+        return studentCertificationAnswersUseCase.execute(studentCertificationAnswerDTO);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
