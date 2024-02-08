@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 public class QuestionAnswerDTO {
 
-    private String questionID;
-    private String alternativeID;
+    private UUID questionID;
+    private UUID alternativeID;
     private boolean isCorrect;
 }
