@@ -3,18 +3,31 @@ package com.jmahanuque.certification.modules.students.useCases;
 import com.jmahanuque.certification.modules.questions.entities.QuestionEntity;
 import com.jmahanuque.certification.modules.questions.repositories.QuestionRepository;
 import com.jmahanuque.certification.modules.students.dto.StudentCertificationAnswerDTO;
+import com.jmahanuque.certification.modules.students.entities.AnswersCertificationsEntity;
+import com.jmahanuque.certification.modules.students.entities.CertificationStudentEntity;
+import com.jmahanuque.certification.modules.students.entities.StudentEntity;
+import com.jmahanuque.certification.modules.students.repositories.CertificationStudentRepository;
+import com.jmahanuque.certification.modules.students.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class StudentCertificationAnswersUseCase {
 
     @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
     private QuestionRepository questionRepository;
 
-    public StudentCertificationAnswerDTO execute(StudentCertificationAnswerDTO dto) {
+    @Autowired
+    private CertificationStudentRepository certificationStudentRepository;
+
+    public CertificationStudentEntity execute(StudentCertificationAnswerDTO dto) {
 
         // Get questions alternatives (Correct or incorrect)
         List<QuestionEntity> questionsEntity = questionRepository.findByTechnology(dto.getTechnology());
@@ -33,7 +46,52 @@ public class StudentCertificationAnswersUseCase {
             }
         });
 
-        return dto;
+        // Verify if students exists by email
+        var student = studentRepository.findByEmail(dto.getEmail());
+        UUID studentID;
+        if (student.isEmpty()) {
+            var studentCreated = StudentEntity.builder().email(dto.getEmail()).build();
+            studentCreated = studentRepository.save(studentCreated);
+            studentID = studentCreated.getId();
+        } else {
+            studentID = student.get().getId();
+        }
+
+        List<AnswersCertificationsEntity> answersCertifications = new ArrayList<>();
+
+        CertificationStudentEntity certificationStudentEntity = CertificationStudentEntity.builder()
+                .technology(dto.getTechnology())
+                .studentID(studentID)
+                .build();
+
+        var certificationStudentCreated = certificationStudentRepository.save(certificationStudentEntity);
+
+
+        return certificationStudentCreated;
         // Save the information of certifications
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
