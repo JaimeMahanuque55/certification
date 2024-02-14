@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StudentCertificationAnswersUseCase {
@@ -33,6 +34,8 @@ public class StudentCertificationAnswersUseCase {
         List<QuestionEntity> questionsEntity = questionRepository.findByTechnology(dto.getTechnology());
         List<AnswersCertificationsEntity> answersCertifications = new ArrayList<>();
 
+        AtomicInteger correctAnswers = new AtomicInteger(0);
+
         dto.getQuestionsAnswers().stream().forEach(questionAnswer -> {
             var question = questionsEntity.stream().filter(q -> q.getId().equals(questionAnswer.getQuestionID()))
                     .findFirst().get();
@@ -42,6 +45,7 @@ public class StudentCertificationAnswersUseCase {
 
             if (findCorrectAlternative.getId().equals(questionAnswer.getAlternativeID())) {
                 questionAnswer.setCorrect(true);
+                correctAnswers.incrementAndGet();
             } else {
                 questionAnswer.setCorrect(false);
             }
@@ -66,6 +70,7 @@ public class StudentCertificationAnswersUseCase {
         CertificationStudentEntity certificationStudentEntity = CertificationStudentEntity.builder()
                 .technology(dto.getTechnology())
                 .studentID(studentID)
+                .grade(correctAnswers.get())
                 .build();
 
         var certificationStudentCreated = certificationStudentRepository.save(certificationStudentEntity);
