@@ -1,5 +1,6 @@
 package com.jmahanuque.certification.modules.students.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,8 @@ public class CertificationStudentEntity {
     @JoinColumn(name = "student_id", insertable = false, updatable = false)
     private StudentEntity studentEntity;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference
     @JoinColumn(name = "answer_certification_id", insertable = false, updatable = false)
     List<AnswersCertificationsEntity> answersCertificationsEntities;
 
