@@ -37,7 +37,7 @@ public class CertificationStudentEntity {
 
     @OneToMany
     @JoinColumn(name = "answer_certification_id", insertable = false, updatable = false)
-    List<AnswersCertificationsEntity> answersCertificationsEntity;
+    List<AnswersCertificationsEntity> answersCertificationsEntities;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

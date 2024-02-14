@@ -2,6 +2,7 @@ package com.jmahanuque.certification.modules.students.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "answers_certification_students")
+@Builder
 public class AnswersCertificationsEntity {
 
     @Id

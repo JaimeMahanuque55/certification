@@ -31,6 +31,7 @@ public class StudentCertificationAnswersUseCase {
 
         // Get questions alternatives (Correct or incorrect)
         List<QuestionEntity> questionsEntity = questionRepository.findByTechnology(dto.getTechnology());
+        List<AnswersCertificationsEntity> answersCertifications = new ArrayList<>();
 
         dto.getQuestionsAnswers().stream().forEach(questionAnswer -> {
             var question = questionsEntity.stream().filter(q -> q.getId().equals(questionAnswer.getQuestionID()))
@@ -44,6 +45,11 @@ public class StudentCertificationAnswersUseCase {
             } else {
                 questionAnswer.setCorrect(false);
             }
+
+            var answerrsCertificationsEntity = AnswersCertificationsEntity.builder().answerID(questionAnswer.getAlternativeID()).questionID(questionAnswer.getQuestionID()).isCorrect(questionAnswer.isCorrect()).build();
+
+
+            answersCertifications.add(answerrsCertificationsEntity);
         });
 
         // Verify if students exists by email
@@ -57,12 +63,9 @@ public class StudentCertificationAnswersUseCase {
             studentID = student.get().getId();
         }
 
-        List<AnswersCertificationsEntity> answersCertifications = new ArrayList<>();
-
         CertificationStudentEntity certificationStudentEntity = CertificationStudentEntity.builder()
                 .technology(dto.getTechnology())
-                .studentID(studentID)
-                .build();
+                .studentID(studentID).answersCertificationsEntities(answersCertifications).build();
 
         var certificationStudentCreated = certificationStudentRepository.save(certificationStudentEntity);
 
