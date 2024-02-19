@@ -3,6 +3,7 @@ package com.jmahanuque.certification.modules.students.useCases;
 import com.jmahanuque.certification.modules.questions.entities.QuestionEntity;
 import com.jmahanuque.certification.modules.questions.repositories.QuestionRepository;
 import com.jmahanuque.certification.modules.students.dto.StudentCertificationAnswerDTO;
+import com.jmahanuque.certification.modules.students.dto.VerifyIfHasCertificationDTO;
 import com.jmahanuque.certification.modules.students.entities.AnswersCertificationsEntity;
 import com.jmahanuque.certification.modules.students.entities.CertificationStudentEntity;
 import com.jmahanuque.certification.modules.students.entities.StudentEntity;
@@ -28,7 +29,16 @@ public class StudentCertificationAnswersUseCase {
     @Autowired
     private CertificationStudentRepository certificationStudentRepository;
 
-    public CertificationStudentEntity execute(StudentCertificationAnswerDTO dto) {
+    @Autowired
+    private VerifyIfHasCertificationUseCase verifyIfHasCertificationUseCase;
+
+    public CertificationStudentEntity execute(StudentCertificationAnswerDTO dto) throws Exception{
+
+        var hastCertification = this.verifyIfHasCertificationUseCase.execute(new VerifyIfHasCertificationDTO(dto.getEmail(), dto.getTechnology()));
+
+        if (hastCertification) {
+            throw new Exception("Voce ja tirou sua certificacao!");
+        }
 
         // Get questions alternatives (Correct or incorrect)
         List<QuestionEntity> questionsEntity = questionRepository.findByTechnology(dto.getTechnology());

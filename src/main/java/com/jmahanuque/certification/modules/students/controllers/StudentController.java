@@ -6,6 +6,7 @@ import com.jmahanuque.certification.modules.students.entities.CertificationStude
 import com.jmahanuque.certification.modules.students.useCases.StudentCertificationAnswersUseCase;
 import com.jmahanuque.certification.modules.students.useCases.VerifyIfHasCertificationUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +35,13 @@ public class StudentController {
     }
 
     @PostMapping("/certification/answer")
-    public CertificationStudentEntity certificationAnswer(@RequestBody StudentCertificationAnswerDTO studentCertificationAnswerDTO) {
-        return studentCertificationAnswersUseCase.execute(studentCertificationAnswerDTO);
+    public ResponseEntity<Object> certificationAnswer(@RequestBody StudentCertificationAnswerDTO studentCertificationAnswerDTO) throws Exception {
+        try {
+            var result = studentCertificationAnswersUseCase.execute(studentCertificationAnswerDTO);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
 

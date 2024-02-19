@@ -1,5 +1,6 @@
 package com.jmahanuque.certification.modules.students.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class CertificationStudentEntity {
     @Column(length = 10)
     private int grade;
 
-    @JoinColumn(name = "student_id", insertable = false, updatable = false)
+    @Column(name = "student_id")
     private UUID studentID;
 
     @ManyToOne
